@@ -12141,26 +12141,32 @@ html.v187-calm *,html.v187-calm *::before,html.v187-calm *::after{animation:none
   bolt:'<svg viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z"/></svg>',
   shield:'<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.4 3 8 7 9.5 4-1.5 7-5.1 7-9.5V6l-7-3Z"/><path d="m9 12 2.2 2.2L15.2 10"/></svg>'};
  function fld(id,label,attrs,pre,ico){return '<div class="ac-f" data-f="'+id+'"><label for="ac-'+id+'">'+label+'</label><div class="ac-i'+(ico?' has-ic':'')+'">'+(ico?'<span class="ac-ic" aria-hidden="true">'+IC[ico]+'</span>':'')+(pre?'<span class="pf">'+pre+'</span>':'')+'<input id="ac-'+id+'" '+attrs+'></div><span class="ac-e"></span></div>'}
- function pin(id,label,ac){return '<div class="ac-f" data-f="'+id+'"><label for="ac-'+id+'">'+label+'</label><div class="ac-i ac-pw has-ic"><span class="ac-ic" aria-hidden="true">'+IC.lock+'</span><input id="ac-'+id+'" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="'+ac+'" placeholder="8 chiffres"><button type="button" class="ac-eye" data-eye="ac-'+id+'" aria-label="Afficher le mot de passe">'+EYE+'</button></div><div class="ac-d">'+'<i></i>'.repeat(8)+'</div><span class="ac-e"></span></div>'}
+ function pwOk(p){return p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p)}
+ function pwui(p){var m=ov&&ov.querySelector('.ac-mt');if(!m)return;
+  var c={len:p.length>=8,let:/[A-Za-z]/.test(p),dig:/\d/.test(p),sym:/[^A-Za-z0-9]/.test(p)};
+  ov.querySelectorAll('.ac-ru li').forEach(function(li){li.classList.toggle('ok',!!c[li.getAttribute('data-r')])});
+  var ok=c.len&&c.let&&c.dig,sc=!p?0:!ok?1:((c.sym&&p.length>=10)?4:(c.sym||p.length>=10)?3:2);
+  m.setAttribute('data-s',sc);m.querySelector('.ac-ml').textContent=['','Trop faible','Correct','Bon','Excellent'][sc]}
+ function pin(id,label,ac,ph,meter){return '<div class="ac-f" data-f="'+id+'"><label for="ac-'+id+'">'+label+'</label><div class="ac-i ac-pw has-ic"><span class="ac-ic" aria-hidden="true">'+IC.lock+'</span><input id="ac-'+id+'" type="password" maxlength="64" autocomplete="'+ac+'" autocapitalize="none" spellcheck="false" placeholder="'+ph+'"><button type="button" class="ac-eye" data-eye="ac-'+id+'" aria-label="Afficher le mot de passe">'+EYE+'</button></div>'+(meter?'<div class="ac-mt" data-s="0"><div class="ac-ms"><i></i><i></i><i></i><i></i></div><span class="ac-ml"></span></div><ul class="ac-ru"><li data-r="len">8 caractères min.</li><li data-r="let">Une lettre</li><li data-r="dig">Un chiffre</li><li data-r="sym" class="opt">Un symbole (conseillé)</li></ul>':'')+'<span class="ac-e"></span></div>'}
  function form(){
   var fe='<div class="ac-fe" id="acFe" role="alert"></div>';
-  if(mode==='login')return fe+'<form id="acF" novalidate>'+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+pin('pw','Mot de passe','current-password')+'<button type="button" class="ac-lk" id="acForgot">Mot de passe oublié ?</button><button type="submit" class="ac-sub">Récupérer mon compte</button></form><p class="ac-sw">Pas de compte ? <button type="button" data-m="signup">Créer un compte</button></p>';
-  return fe+'<form id="acF" novalidate><div class="ac-r">'+fld('first','Prénom','autocomplete="given-name" placeholder="Jean"')+fld('last','Nom','autocomplete="family-name" placeholder="Kouassi"')+'</div>'+fld('phone','Numéro de téléphone','type="tel" inputmode="tel" autocomplete="tel" placeholder="07 00 00 00 00"','+225','ph')+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+fld('dist','District','autocomplete="off" placeholder="Ex. District de Port-Bouët"','','pin')+pin('pw','Mot de passe','new-password')+'<p class="ac-ok">Choisis un code de 8 chiffres.</p>'+pin('pw2','Confirmer le mot de passe','new-password')+'<div class="ac-bd"><span>'+IC.shield+'Données protégées</span><span>'+IC.mail+'Code envoyé par e‑mail</span></div><button type="submit" class="ac-sub">Créer mon compte</button></form><p class="ac-sw ac-rc"><button type="button" data-m="login">Récupérer mon compte</button></p>'}
+  if(mode==='login')return fe+'<form id="acF" novalidate>'+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+pin('pw','Mot de passe','current-password','Ton mot de passe',0)+'<button type="button" class="ac-lk" id="acForgot">Mot de passe oublié ?</button><button type="submit" class="ac-sub">Récupérer mon compte</button></form><p class="ac-sw">Pas de compte ? <button type="button" data-m="signup">Créer un compte</button></p>';
+  return fe+'<form id="acF" novalidate><div class="ac-r">'+fld('first','Prénom','autocomplete="given-name" placeholder="Jean"')+fld('last','Nom','autocomplete="family-name" placeholder="Kouassi"')+'</div>'+fld('phone','Numéro de téléphone','type="tel" inputmode="tel" autocomplete="tel" placeholder="07 00 00 00 00"','+225','ph')+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+fld('dist','District','autocomplete="off" placeholder="Ex. District de Port-Bouët"','','pin')+pin('pw','Mot de passe','new-password','Au moins 8 caractères',1)+pin('pw2','Confirmer le mot de passe','new-password','Répète ton mot de passe',0)+'<button type="submit" class="ac-sub">Créer mon compte</button><p class="ac-nt">'+IC.mail+'Un code de confirmation sera envoyé à ton e-mail.</p></form><p class="ac-sw ac-rc"><button type="button" data-m="login">Récupérer mon compte</button></p>'}
  function paint(){var l=mode==='login';
   ov.querySelector('h2').textContent=l?'Retrouve ton compte':'Crée ton compte';
-  ov.querySelector('.ac-sb').textContent=l?'Saisis l’e-mail et le mot de passe à 8 chiffres de ton compte.':'Crée ton compte pour accéder au Camp de District 3 en 1.';
+  ov.querySelector('.ac-sb').textContent=l?'Saisis l’e-mail et le mot de passe de ton compte.':'Crée ton compte pour accéder au Camp de District 3 en 1.';
   ov.querySelector('.ac-fm').innerHTML=form();ov.scrollTop=0}
  function toast(t){var e=document.createElement('div');e.className='ac-t';e.textContent=t;document.body.appendChild(e);requestAnimationFrame(function(){e.classList.add('on')});setTimeout(function(){e.classList.remove('on');setTimeout(function(){e.remove()},300)},3200)}
  function open(m){mode=m==='signup'?'signup':'login';if(ov){paint();return}
   ov=document.createElement('div');ov.className='ac';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-labelledby','acTitle');
-  ov.innerHTML='<div class="ac-w"><div class="ac-mk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16"/><path d="M9.5 20 12 15.2l2.5 4.8"/><path d="M2 20h20"/></svg></div><p class="ac-kk">Camp de District 3 en 1 · Garango 2026</p><h2 id="acTitle"></h2><p class="ac-sb"></p><div class="ac-fm"></div><div class="ac-lg">Ton compte est enregistré en ligne et sur cet appareil.</div></div>';
+  ov.innerHTML='<div class="ac-w"><div class="ac-br"><div class="ac-mk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16"/><path d="M9.5 20 12 15.2l2.5 4.8"/><path d="M2 20h20"/></svg></div><div class="ac-bn"><b>Camp de District 3 en 1</b><span>Garango 2026</span></div></div><h2 id="acTitle"></h2><p class="ac-sb"></p><div class="ac-fm"></div><div class="ac-lg">Ton compte est enregistré en ligne et sur cet appareil.</div></div>';
   document.body.appendChild(ov);paint();(function(){var g=document.querySelector('.ref-header .ref-logo img'),m=ov.querySelector('.ac-mk');if(g&&g.src&&m){var im=document.createElement('img');im.alt='Dynamique District de Bouaflé';im.src=g.src;m.innerHTML='';m.appendChild(im)}})();
   ov.addEventListener('click',function(e){var s=e.target.closest('.ac-sw button[data-m]'),y=e.target.closest('.ac-eye');
    if(s&&s.dataset.m!==mode){mode=s.dataset.m;paint();return}
    if(y){var i=document.getElementById(y.dataset.eye),sh=i.type==='password';i.type=sh?'text':'password';y.innerHTML=sh?EYEO:EYE;return}
    if(e.target.id==='acForgot')ferr('Réinitialisation indisponible : les comptes sont enregistrés sur cet appareil. Rapproche-toi de l’organisation ou crée un nouveau compte.')});
   ov.addEventListener('input',function(e){var t=e.target,f=t.closest('.ac-f');if(!f)return;
-   if(t.type==='password'||t.type==='text'&&t.closest('.ac-pw')){t.value=dg(t.value).slice(0,8);var d=f.querySelectorAll('.ac-d i');d.forEach(function(x,k){x.classList.toggle('on',k<t.value.length)})}
+   if(t.id==='ac-pw'&&mode==='signup')pwui(t.value);
    f.classList.remove('err');var fe=ov.querySelector('#acFe');if(fe)fe.classList.remove('show')});
   ov.addEventListener('submit',function(e){e.preventDefault();mode==='login'?login():signup()});
   requestAnimationFrame(function(){requestAnimationFrame(function(){ov.classList.add('on')})})}
@@ -12173,7 +12179,7 @@ html.v187-calm *,html.v187-calm *::before,html.v187-calm *::after{animation:none
   try{sessionStorage.setItem('ac_p','1')}catch(e){}document.documentElement.classList.remove('camp-gate');close();window.showAppTab&&showAppTab('plus')}
  function login(){if(busy)return;var em=v('email').trim().toLowerCase(),pw=v('pw'),bad=0;
   if(!EM.test(em)){ferrF('email','Saisis un e-mail valide.');bad=1}
-  if(!/^\d{8}$/.test(pw)){ferrF('pw','Le mot de passe contient exactement 8 chiffres.');bad=1}
+  if(!pw){ferrF('pw','Saisis ton mot de passe.');bad=1}
   if(bad)return;var acc=accounts().filter(function(a){return(a.Email||'').toLowerCase()===em})[0];
   if(!acc){ferrF('email','Aucun compte avec cet e-mail.');ferr('Aucun compte trouvé. Vérifie ton e-mail ou crée un compte.');return}
   busy=true;hash(pw,acc.salt).then(function(h){busy=false;if(h!==acc.pw){ferrF('pw','Mot de passe incorrect.');return}go(acc);toast('Bienvenue '+String(acc.first||acc.Name).trim().split(/\s+/)[0]+' !')})}
@@ -12182,7 +12188,7 @@ html.v187-calm *,html.v187-calm *::before,html.v187-calm *::after{animation:none
   if(ph.length<8||ph.length>12){ferrF('phone','Numéro invalide (8 à 12 chiffres).');bad=1}
   if(!EM.test(em)){ferrF('email','Saisis un e-mail valide.');bad=1}
   if(di.length<2){ferrF('dist','Indique ton district.');bad=1}
-  if(!/^\d{8}$/.test(pw)){ferrF('pw','8 chiffres exactement.');bad=1}
+  if(!pwOk(pw)){ferrF('pw','Utilise au moins 8 caractères, avec des lettres et des chiffres.');bad=1}
   if(p2!==pw||!p2){ferrF('pw2','Les mots de passe ne correspondent pas.');bad=1}
   if(bad){ferr('Vérifie les champs signalés.');return}
   var L=accounts();if(L.some(function(a){return(a.Email||'').toLowerCase()===em})){ferrF('email','Cet e-mail a déjà un compte.');ferr('Cet e-mail a déjà un compte. Utilise « Récupérer mon compte » en bas de l’écran.');return}
@@ -12822,6 +12828,65 @@ html body .ac .ac-lg{margin:16px 0 0;font-size:12.5px;line-height:1.5;color:#8a9
 @media(min-width:700px){html body .ac .ac-w{padding-top:56px}}
 @media(max-width:340px){html body .ac h2{font-size:27px}}
 </style>
+<style id="v260-auth-compact">
+/* ===== V260 — Création de compte : compact, sobre, professionnel ===== */
+html body .ac{background:#fff;color:#14182e}
+html body .ac::before{display:none}
+html body .ac .ac-w{max-width:440px;padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 0}
+html body .ac .ac-br{display:flex;align-items:center;gap:10px}
+html body .ac .ac-mk{width:40px;height:40px;margin:0;padding:2px;border-radius:12px;border:1px solid #e6e8ef;box-shadow:none;flex:0 0 auto}
+html body .ac .ac-mk img{border-radius:10px}
+html body .ac .ac-mk svg{width:22px;height:22px}
+html body .ac .ac-bn{display:flex;flex-direction:column;gap:1px;min-width:0;line-height:1.2}
+html body .ac .ac-bn b{font-size:14px;font-weight:700;color:#14182e}
+html body .ac .ac-bn span{font-size:12px;color:#7a8097}
+html body .ac h2{margin:20px 0 0;font-size:23px;line-height:1.2;font-weight:700;letter-spacing:-.015em;color:#14182e}
+html body .ac .ac-sb{margin:6px 0 18px;max-width:none;font-size:14px;line-height:1.5;color:#656b84}
+html body .ac .ac-f{margin-bottom:12px}
+html body .ac .ac-f label{margin:0 0 6px 1px;font-size:13px;font-weight:600;color:#14182e}
+html body .ac .ac-r{gap:10px}
+html body .ac .ac-i{height:46px;border:1px solid transparent;border-radius:12px;background:#f4f5f7}
+html body .ac .ac-i:focus-within{border-color:#153b91;background:#fff;box-shadow:0 0 0 3px rgba(21,59,145,.12)}
+html body .ac .ac-i input{padding:0 14px;font-size:15px;font-weight:500;color:#14182e}
+html body .ac .ac-i.has-ic input{padding-left:0}
+html body .ac .ac-i input::placeholder{color:#9096ad;font-weight:400}
+html body .ac .ac-ic{flex:0 0 42px;color:#7a8097}
+html body .ac .ac-ic svg{width:18px;height:18px}
+html body .ac .ac-i .pf{padding:0 8px 0 0;font-size:14.5px;font-weight:600;color:#14182e}
+html body .ac .ac-eye{flex:0 0 42px;color:#7a8097}
+html body .ac .ac-eye svg{width:19px;height:19px}
+html body .ac .ac-pw input,html body .ac .ac-pw input:not(:placeholder-shown){letter-spacing:0;font-weight:500}
+html body .ac .ac-e{margin:5px 1px 0;font-size:12px;color:#d12f3a}
+html body .ac .ac-f.err .ac-i{border-color:#e5484d;background:#fff7f7}
+html body .ac .ac-fe{margin-bottom:12px;padding:10px 12px;border-radius:10px;font-size:13px}
+/* Jauge et règles du mot de passe */
+html body .ac .ac-mt{display:flex;align-items:center;gap:10px;margin:8px 1px 0}
+html body .ac .ac-ms{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+html body .ac .ac-ms i{height:3px;border-radius:2px;background:#e4e7ef;transition:background .2s}
+html body .ac .ac-mt[data-s="1"] i:nth-child(-n+1){background:#e5484d}
+html body .ac .ac-mt[data-s="2"] i:nth-child(-n+2){background:#f0a020}
+html body .ac .ac-mt[data-s="3"] i:nth-child(-n+3){background:#2e9e5b}
+html body .ac .ac-mt[data-s="4"] i{background:#1f8a4c}
+html body .ac .ac-ml{min-width:64px;text-align:right;font-size:12px;font-weight:600;color:#656b84}
+html body .ac .ac-ru{list-style:none;margin:8px 1px 0;padding:0;display:flex;flex-wrap:wrap;gap:5px 14px}
+html body .ac .ac-ru li{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.2;color:#7a8097}
+html body .ac .ac-ru li::before{content:"";flex:0 0 14px;width:14px;height:14px;box-sizing:border-box;border-radius:50%;border:1.5px solid #cfd3e0;background:center/9px no-repeat}
+html body .ac .ac-ru li.ok{color:#1f7a45}
+html body .ac .ac-ru li.ok::before{border-color:#2e9e5b;background-color:#2e9e5b;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E")}
+/* Bouton et liens */
+html body .ac .ac-sub{min-height:48px;margin-top:6px;border-radius:12px;font-size:15.5px;font-weight:700;letter-spacing:0;background:#153b91;box-shadow:none}
+html body .ac .ac-sub:active{transform:none;background:#102f78}
+html body .ac .ac-nt{display:flex;align-items:center;justify-content:center;gap:6px;margin:12px 0 0;font-size:12.5px;line-height:1.4;color:#7a8097;text-align:center}
+html body .ac .ac-nt svg{flex:0 0 15px;width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+html body .ac .ac-lk{margin:-4px 0 10px auto;padding:6px 1px;font-size:13.5px;font-weight:600;color:#153b91}
+html body .ac .ac-sw{margin:16px 0 0;font-size:14px;color:#656b84}
+html body .ac .ac-sw button{padding:8px 4px;font-weight:700;color:#153b91}
+html body .ac .ac-rc{margin:4px 0 0}
+html body .ac .ac-rc button{font-size:13.5px;font-weight:600;color:#656b84}
+html body .ac .ac-lg{margin:12px 0 0;font-size:12px;color:#8a90a8}
+@media(min-width:700px){html body .ac .ac-w{padding-top:40px}}
+@media(max-width:340px){html body .ac h2{font-size:21px}}
+</style>
 <script id="v223-auth-lock">
 /* Bloque le défilement de la page derrière l'écran de connexion */
 (function(){
@@ -12850,112 +12915,121 @@ html body .ac .ac-lg{margin:16px 0 0;font-size:12.5px;line-height:1.5;color:#8a9
 })();
 </script>
 <style id="v224-verif-css">
-.vf{position:fixed;inset:0;z-index:100050;height:100vh;height:100dvh;background:#fff;color:#0e1020;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;font-family:inherit;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.9,.3,1)}
+.vf{position:fixed;inset:0;z-index:100050;height:100vh;height:100dvh;background:#fff;color:#14182e;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.9,.3,1)}
 .vf.on{transform:none}
 .vf,.vf *{box-sizing:border-box}
-.vf-top{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 0}
-.vf-back{width:44px;height:44px;border:0;border-radius:50%;background:#f1f2f6;display:grid;place-items:center;color:#0e1020;padding:0}
-.vf-help{border:0;background:none;display:flex;align-items:center;gap:7px;font:inherit;font-size:14.5px;font-weight:600;color:#5d6380;padding:10px 4px}
-.vf svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.vf-help svg{width:19px;height:19px}
-.vf-body{padding:26px 22px 0}
-.vf-ic{width:64px;height:64px;border-radius:50%;background:#e8f0fe;color:#1a56db;display:grid;place-items:center;margin-bottom:22px}
-.vf-ic svg{width:28px;height:28px}
-.vf h2{margin:0 0 8px;font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.02em}
-.vf-sub{margin:0;font-size:15.5px;line-height:1.5;color:#6b7089}
-.vf-sub b{display:block;color:#0e1020;font-weight:700;word-break:break-all}
-.vf-hbox{margin:16px 0 0;padding:12px 14px;border-radius:12px;background:#f5f6fa;font-size:13.5px;line-height:1.5;color:#4b5069}
-.vf-demo{margin:16px 0 0;padding:12px 14px;border-radius:12px;background:#fff6e8;border:1px solid #f6d9a8;font-size:13.5px;line-height:1.45;color:#7a4b00}
-.vf-demo b{font-size:17px;letter-spacing:.2em;color:#14104a}
-.vf-code{position:relative;margin:30px 0 8px}
+.vf-top{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:440px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0}
+.vf-back{width:40px;height:40px;border:0;border-radius:12px;background:#f4f5f7;display:grid;place-items:center;color:#14182e;padding:0}
+.vf-help{border:0;background:none;display:flex;align-items:center;gap:6px;font:inherit;font-size:13.5px;font-weight:600;color:#656b84;padding:10px 4px}
+.vf svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vf-help svg{width:17px;height:17px}
+.vf-body{width:100%;max-width:440px;margin:0 auto;padding:22px 20px 0}
+.vf-ic{width:46px;height:46px;border-radius:14px;background:#eef2fb;color:#153b91;display:grid;place-items:center;margin-bottom:16px}
+.vf-ic svg{width:23px;height:23px}
+.vf h2{margin:0 0 6px;font-size:22px;line-height:1.2;font-weight:700;letter-spacing:-.015em}
+.vf-sub{margin:0;font-size:14px;line-height:1.5;color:#656b84}
+.vf-sub b{display:block;color:#14182e;font-weight:600;word-break:break-all}
+.vf-hbox{margin:14px 0 0;padding:10px 12px;border-radius:10px;background:#f4f5f7;font-size:13px;line-height:1.5;color:#4b5069}
+.vf-code{position:relative;margin:22px 0 6px}
 .vf-in{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;font-size:16px;z-index:2;caret-color:transparent}
-.vf-bx{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
-.vf-bx i{height:64px;border-bottom:3px solid #e4e6ee;display:grid;place-items:center;font-style:normal;font-size:30px;font-weight:700;color:#0e1020;transition:border-color .15s}
-.vf-bx i.f{border-color:#9db8ee}
-.vf-bx i.on{border-color:#1a56db}
-.vf-bx.err i{border-color:#e5484d;color:#d12f3a}
-.vf-bx.ok i{border-color:#1f9d55;color:#1f9d55}
+.vf-bx{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.vf-bx i{height:52px;border:1.5px solid transparent;border-radius:12px;background:#f4f5f7;display:grid;place-items:center;font-style:normal;font-size:22px;font-weight:700;color:#14182e;transition:border-color .15s,background .15s,box-shadow .15s}
+.vf-bx i.f{background:#eef2fb}
+.vf-bx i.on{border-color:#153b91;background:#fff;box-shadow:0 0 0 3px rgba(21,59,145,.12)}
+.vf-bx.err i{border-color:#e5484d;background:#fff7f7;color:#d12f3a}
+.vf-bx.ok i{border-color:#1f9d55;background:#f2fbf6;color:#1f9d55}
 .vf-bx.shake{animation:vfsh .35s}
-@keyframes vfsh{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
-.vf-msg{min-height:20px;margin:10px 0 0;font-size:13.5px;line-height:1.4;color:#d12f3a}
+@keyframes vfsh{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.vf-msg{min-height:18px;margin:8px 0 0;font-size:13px;line-height:1.4;color:#d12f3a}
 .vf-msg.good{color:#1f9d55}
-.vf-tm{margin:20px 0 18px;text-align:center;font-size:15px;color:#6b7089}
-.vf-tm b{color:#0e1020;font-variant-numeric:tabular-nums}
-.vf-re{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;border:0;border-radius:27px;background:#1a56db;color:#fff;font:inherit;font-size:16px;font-weight:700;transition:background .2s,color .2s}
-.vf-re svg{width:19px;height:19px}
-.vf-re:disabled{background:#e3ecfc;color:#86a2d8}
-.vf-re:not(:disabled):active{background:#1647b8}
-.vf-alt{margin:auto auto 0;display:flex;align-items:center;gap:8px;border:0;background:none;font:inherit;font-size:15.5px;font-weight:700;color:#1a56db;padding:22px 12px calc(env(safe-area-inset-bottom,0px) + 22px)}
-.vf-alt svg{width:18px;height:18px}
-@media(max-width:360px){.vf-bx{gap:6px}.vf-bx i{height:56px;font-size:26px}.vf h2{font-size:23px}}
+.vf-tm{margin:14px 0 14px;text-align:center;font-size:13.5px;color:#656b84}
+.vf-tm b{color:#14182e;font-variant-numeric:tabular-nums}
+.vf-re{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border:0;border-radius:12px;background:#153b91;color:#fff;font:inherit;font-size:15px;font-weight:700;transition:background .2s,color .2s}
+.vf-re svg{width:18px;height:18px}
+.vf-re:disabled{background:#e8ecf6;color:#8f9ab8}
+.vf-re:not(:disabled):active{background:#102f78}
+.vf-alt{margin:auto auto 0;display:flex;align-items:center;gap:8px;border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:#153b91;padding:20px 12px calc(env(safe-area-inset-bottom,0px) + 20px)}
+.vf-alt svg{width:17px;height:17px}
+@media(max-width:360px){.vf-bx{gap:6px}.vf-bx i{height:48px;font-size:20px}}
 @media(prefers-reduced-motion:reduce){.vf{transition:none}.vf-bx.shake{animation:none}}
 </style>
-<script id="v224-emailjs-config">
-/* ===== CONFIG EMAILJS : colle tes 3 valeurs entre les guillemets ===== */
-window.CAMP_EMAILJS={
-  service:"",   /* Service ID  (ex. service_xxxxxxx) */
-  template:"",  /* Template ID (ex. template_xxxxxxx) */
-  key:""        /* Public Key  (ex. AbCdEf123...)    */
-};
-</script>
+
 <script id="v224-verif-js">
 /* Vérification de l'e-mail par code à 6 chiffres (après « Créer mon compte »).
-   Pour envoyer de vrais e-mails, définir window.CAMP_MAIL_ENDPOINT = "https://…"
-   (service qui reçoit {email,name,code,app} en POST JSON et envoie le message).
-   Sans cela : mode test, le code s'affiche à l'écran. */
+   Le code est envoyé et contrôlé par Supabase (window.CAMP_OTP, défini dans le script Supabase en bas de page).
+   Aucun code n'est jamais affiché dans l'application. */
 (function(){
- var WAIT=60,TTL=600000,MAXTRY=5,cur=null;
+ var WAIT=60,MAXTRY=5,LEN=6,cur=null;
  var I={
   back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
   head:'<svg viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>',
   mail:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7.5 12 13l8.5-5.5"/></svg>',
   re:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>',
-  ph:'<svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></svg>'};
- function gen(){var a=new Uint32Array(1);if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(a);else a[0]=Math.floor(Math.random()*4294967295);return String(a[0]%1000000).padStart(6,'0')}
- function send(c){var E=window.CAMP_EMAILJS;
-  if(E&&E.service&&E.template&&E.key)return fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:E.service,template_id:E.template,user_id:E.key,template_params:{to_email:c.email,to_name:c.name,code:c.code,app:'Camp de District 3 en 1'}})}).then(function(r){if(!r.ok)throw new Error('send');return 'sent'});
-  var u=window.CAMP_MAIL_ENDPOINT;if(!u)return Promise.resolve('demo');
-  return fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:c.email,name:c.name,code:c.code,app:'Camp de District 3 en 1'})}).then(function(r){if(!r.ok)throw new Error('send');return 'sent'})}
+  ed:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg>'};
  function mm(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+ function txt(e){return String(e&&(e.message||e)||'').toLowerCase()}
+ function isNet(e){return /failed to fetch|network|load failed|fetch/.test(txt(e))&&!(e&&e.status)}
+ function sendMsg(e){var m=txt(e);
+  if((e&&e.code==='exists')||/already|registered|exists/.test(m))return 'Cet e-mail a déjà un compte. Utilise « Récupérer mon compte » sur l’écran précédent.';
+  if((e&&e.status===429)||/rate limit|too many|only request|after \d+ seconds/.test(m))return 'Trop de demandes d’envoi. Patiente une minute puis renvoie le code.';
+  if(isNet(e))return 'Connexion impossible. Vérifie ta connexion internet puis renvoie le code.';
+  return 'L’e-mail n’a pas pu être envoyé. Réessaie dans un instant.'}
  window.campVerifyEmail=function(email,name,done){
   if(cur)return;
   var el=document.createElement('div');el.className='vf';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-labelledby','vfT');
   el.innerHTML='<div class="vf-top"><button type="button" class="vf-back" aria-label="Retour">'+I.back+'</button><button type="button" class="vf-help">'+I.head+'Besoin d’aide ?</button></div>'+
-   '<div class="vf-body"><div class="vf-ic">'+I.mail+'</div><h2 id="vfT">Entre le code reçu par e-mail</h2><p class="vf-sub">Un code à 6 chiffres a été envoyé à<b class="vf-em"></b></p>'+
-   '<div class="vf-hbox" hidden>Vérifie aussi ton dossier spam. Si rien n’arrive, renvoie le code ou rapproche-toi de l’organisation du Camp.</div><div class="vf-demo" hidden></div>'+
+   '<div class="vf-body"><div class="vf-ic">'+I.mail+'</div><h2 id="vfT">Confirme ton adresse e-mail</h2><p class="vf-sub">Saisis le code à 6 chiffres envoyé à<b class="vf-em"></b></p>'+
+   '<div class="vf-hbox" hidden>Vérifie aussi ton dossier spam ou courrier indésirable. Si rien n’arrive après une minute, renvoie le code.</div>'+
    '<div class="vf-code"><input class="vf-in" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-label="Code à 6 chiffres"><div class="vf-bx"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>'+
-   '<p class="vf-msg" role="alert"></p><p class="vf-tm">Renvoyer le code dans <b>01:00</b></p>'+
-   '<button type="button" class="vf-re" disabled>'+I.re+'Renvoyer le code par e-mail</button></div>'+
-   '<button type="button" class="vf-alt">'+I.ph+'Utiliser un autre compte</button>';
-  var q=function(s){return el.querySelector(s)},inp=q('.vf-in'),bx=q('.vf-bx'),bs=bx.children,msg=q('.vf-msg'),tm=q('.vf-tm'),re=q('.vf-re'),demo=q('.vf-demo');
+   '<p class="vf-msg" role="alert"></p><p class="vf-tm">Envoi du code…</p>'+
+   '<button type="button" class="vf-re" disabled>'+I.re+'Renvoyer le code</button></div>'+
+   '<button type="button" class="vf-alt">'+I.ed+'Modifier mon e-mail</button>';
+  var q=function(x){return el.querySelector(x)},inp=q('.vf-in'),bx=q('.vf-bx'),bs=bx.children,msg=q('.vf-msg'),tm=q('.vf-tm'),re=q('.vf-re');
   q('.vf-em').textContent=email;
-  cur={code:'',exp:0,tries:0,end:0,t:null};
-  function paint(){var v=inp.value,foc=document.activeElement===inp;for(var k=0;k<6;k++){bs[k].textContent=v[k]||'';bs[k].className=(v[k]?'f ':'')+((foc&&(k===v.length||(k===5&&v.length===6)))?'on':'')}}
+  var me=cur={tries:0,end:0,t:null,busy:false,sent:false};
+  function paint(){var v=inp.value,foc=document.activeElement===inp;for(var k=0;k<LEN;k++){bs[k].textContent=v[k]||'';bs[k].className=(v[k]?'f ':'')+((foc&&(k===v.length||(k===LEN-1&&v.length===LEN)))?'on':'')}}
   function say(t,g){msg.textContent=t||'';msg.className='vf-msg'+(g?' good':'')}
-  function tick(){var s=Math.ceil((cur.end-Date.now())/1000);if(s>0){tm.innerHTML='Renvoyer le code dans <b>'+mm(s)+'</b>';re.disabled=true}else{tm.textContent='Tu peux demander un nouveau code.';re.disabled=false;clearInterval(cur.t)}}
-  function start(){cur.end=Date.now()+WAIT*1000;clearInterval(cur.t);tick();cur.t=setInterval(tick,250)}
-  function issue(first){
-   cur.code=gen();cur.exp=Date.now()+TTL;cur.tries=0;inp.value='';bx.className='vf-bx';paint();say('');start();
-   if(!window.CAMP_MAIL_ENDPOINT&&!(window.CAMP_EMAILJS&&window.CAMP_EMAILJS.service&&window.CAMP_EMAILJS.template&&window.CAMP_EMAILJS.key)){demo.hidden=false;demo.innerHTML='<b>Mode test</b> : l’envoi d’e-mails n’est pas encore configuré. Ton code : <b>'+cur.code+'</b>'}
-   send({email:email,name:name,code:cur.code}).then(function(){if(!first&&!demo.hidden===false)say('Nouveau code envoyé.',1)}).catch(function(){say('Envoi impossible. Vérifie ta connexion puis renvoie le code.');clearInterval(cur.t);tm.textContent='';re.disabled=false})}
-  function close(){if(!cur)return;clearInterval(cur.t);cur=null;el.classList.remove('on');setTimeout(function(){el.remove()},320)}
-  function check(){var v=inp.value;if(v.length<6)return;
-   if(!cur.code){say('Trop d’essais. Demande un nouveau code.');return}
-   if(Date.now()>cur.exp){cur.code='';say('Code expiré. Demande un nouveau code.');bx.className='vf-bx err';return}
-   if(v===cur.code){bx.className='vf-bx ok';inp.blur();inp.disabled=true;re.disabled=true;say('E-mail vérifié.',1);clearInterval(cur.t);setTimeout(function(){close();done&&done()},550);return}
-   cur.tries++;bx.className='vf-bx err shake';
-   if(cur.tries>=MAXTRY){cur.code='';say('Trop d’essais. Demande un nouveau code.');clearInterval(cur.t);tm.textContent='';re.disabled=false}
-   else say('Code incorrect. '+(MAXTRY-cur.tries)+' essai'+(MAXTRY-cur.tries>1?'s':'')+' restant'+(MAXTRY-cur.tries>1?'s':'')+'.');
-   setTimeout(function(){bx.classList.remove('shake');inp.value='';bx.className=cur&&cur.code?'vf-bx':'vf-bx err';paint()},420)}
-  inp.addEventListener('input',function(){inp.value=inp.value.replace(/\D+/g,'').slice(0,6);if(inp.value.length<6){bx.className='vf-bx';if(cur&&cur.code)say('')}paint();check()});
+  function tick(){var s=Math.ceil((me.end-Date.now())/1000);if(s>0){tm.innerHTML='Nouveau code possible dans <b>'+mm(s)+'</b>';re.disabled=true}else{tm.textContent='Tu peux demander un nouveau code.';re.disabled=false;clearInterval(me.t)}}
+  function start(){me.end=Date.now()+WAIT*1000;clearInterval(me.t);tick();me.t=setInterval(tick,250)}
+  function stop(t){clearInterval(me.t);tm.textContent=t||'';re.disabled=false}
+  function close(){if(cur!==me)return;clearInterval(me.t);cur=null;el.classList.remove('on');setTimeout(function(){el.remove()},320)}
+  function issue(){
+   if(me.busy)return;
+   var o=window.CAMP_OTP,first=!me.sent;
+   inp.value='';bx.className='vf-bx';paint();say('');
+   if(!o){stop('');say('Service e-mail indisponible. Vérifie ta connexion puis renvoie le code.');return}
+   me.busy=true;re.disabled=true;tm.textContent='Envoi du code…';
+   o[first?'send':'resend'](email).then(function(r){
+    if(cur!==me)return;me.busy=false;
+    if(r==='skip'){close();done&&done();return}
+    me.sent=true;me.tries=0;start();if(!first)say('Un nouveau code vient d’être envoyé.',1);
+    try{inp.focus()}catch(e){}
+   }).catch(function(e){if(cur!==me)return;me.busy=false;stop('');say(sendMsg(e));try{console.warn('[Camp] envoi du code',e)}catch(x){}})}
+  function check(){var v=inp.value;if(v.length<LEN||me.busy)return;
+   if(me.tries>=MAXTRY){say('Trop d’essais. Demande un nouveau code.');return}
+   var o=window.CAMP_OTP;if(!o){say('Service e-mail indisponible.');return}
+   me.busy=true;inp.disabled=true;
+   o.verify(email,v).then(function(){
+    if(cur!==me)return;
+    bx.className='vf-bx ok';inp.blur();re.disabled=true;say('E-mail vérifié.',1);clearInterval(me.t);tm.textContent='';
+    setTimeout(function(){close();done&&done()},550)
+   }).catch(function(e){
+    if(cur!==me)return;me.busy=false;inp.disabled=false;
+    if(isNet(e)){say('Connexion impossible. Vérifie ta connexion internet.');return}
+    me.tries++;bx.className='vf-bx err shake';
+    var left=MAXTRY-me.tries;
+    if(left<=0)say('Trop d’essais. Demande un nouveau code.');
+    else say('Code incorrect ou expiré. '+left+' essai'+(left>1?'s':'')+' restant'+(left>1?'s':'')+'.');
+    setTimeout(function(){bx.classList.remove('shake');inp.value='';bx.className=me.tries>=MAXTRY?'vf-bx err':'vf-bx';paint();try{inp.focus()}catch(x){}},420)})}
+  inp.addEventListener('input',function(){inp.value=inp.value.replace(/\D+/g,'').slice(0,LEN);if(inp.value.length<LEN){bx.className='vf-bx';say('')}paint();check()});
   inp.addEventListener('focus',paint);inp.addEventListener('blur',paint);
-  re.onclick=function(){if(!re.disabled)issue(false)};
+  re.onclick=function(){if(!re.disabled)issue()};
   q('.vf-back').onclick=q('.vf-alt').onclick=close;
   q('.vf-help').onclick=function(){var h=q('.vf-hbox');h.hidden=!h.hidden};
   document.body.appendChild(el);
   requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('on')})});
   setTimeout(function(){try{inp.focus()}catch(e){}},360);
-  issue(true)};
+  issue()};
 })();
 </script>
 <style id="v225-recap-css">
@@ -13358,15 +13432,44 @@ body #screenMatchs .champ-stats span{display:block;margin-top:6px!important;font
     return sb.auth.signInWithPassword({ email: email, password: pw }).then(function (r) { if (r.error) throw r.error; return r.data.user; });
   }
 
-  /* Création de compte : on récupère les champs avant la vérification du code, puis on crée le compte en ligne une fois l'e-mail validé */
+  /* Création de compte : Supabase envoie le code à 6 chiffres par e-mail (SMTP), puis le contrôle.
+     Le compte en ligne n'est confirmé qu'une fois le code saisi. */
+  var pending = null;   // champs du formulaire de création de compte
+  function saveProfile(user, p) {
+    return Promise.resolve(ensureProfile(user, p)).then(function (r) { if (r && r.error) log('profil', r.error); }, function (e) { log('profil', e); });
+  }
+  function otpSignUp(p) {
+    return sb.auth.signUp({ email: p.email, password: p.pw, options: { data: { name: p.name, phone: dg(p.phone), group_name: p.group } } })
+      .then(function (r) {
+        if (r.error) throw r.error;
+        var u = r.data && r.data.user;
+        if (u && Array.isArray(u.identities) && u.identities.length === 0) { var ex = new Error('already registered'); ex.code = 'exists'; throw ex; }
+        if (r.data && r.data.session) {   // « Confirm email » désactivé dans Supabase : aucun e-mail n'est envoyé
+          console.warn('[Camp] Active « Confirm email » dans Supabase (Authentication → Sign In / Providers → Email) pour que le code soit envoyé.');
+          return saveProfile(u, p).then(function () { return 'skip'; });
+        }
+        return 'sent';
+      });
+  }
+  window.CAMP_OTP = {
+    send: function () { return pending ? otpSignUp(pending) : Promise.reject(new Error('formulaire manquant')); },
+    resend: function (email) { return sb.auth.resend({ type: 'signup', email: email }).then(function (r) { if (r.error) throw r.error; return 'sent'; }); },
+    verify: function (email, code) {
+      return sb.auth.verifyOtp({ email: email, token: code, type: 'signup' }).then(function (r) {
+        if (r.error) throw r.error;
+        var u = r.data && (r.data.user || (r.data.session && r.data.session.user));
+        return (u && pending) ? saveProfile(u, pending) : null;
+      }).then(function () { return true; });
+    }
+  };
   var vOrig = window.campVerifyEmail;
   if (typeof vOrig === 'function') {
     window.campVerifyEmail = function (email, name, done) {
       var g = function (id) { var e = document.getElementById('ac-' + id); return e ? e.value : ''; };
-      var p = { email: String(email).toLowerCase(), pw: g('pw'), name: (g('first').trim() + ' ' + g('last').trim()).trim(), phone: g('phone'), group: g('dist').trim() };
+      pending = { email: String(email).trim().toLowerCase(), pw: g('pw'), name: (g('first').trim() + ' ' + g('last').trim()).trim(), phone: g('phone'), group: g('dist').trim() };
       return vOrig.call(this, email, name, function () {
         var r = done && done.apply(this, arguments);
-        if (p.pw) remoteSignUp(p).catch(function (e) { log('création du compte en ligne', e); });
+        pending = null;
         return r;
       });
     };
@@ -13380,7 +13483,7 @@ body #screenMatchs .champ-stats span{display:block;margin-top:6px!important;font
     var emEl = document.getElementById('ac-email'), pwEl = document.getElementById('ac-pw');
     if (!emEl || !pwEl) return;
     var email = emEl.value.trim().toLowerCase(), pw = pwEl.value;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || !/^\d{8}$/.test(pw)) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || !pw) return;
     var local = rd(ACC, []).filter(function (a) { return (a.Email || '').toLowerCase() === email; })[0];
 
     if (local) {            // compte local existant : connexion normale + synchronisation en ligne en arrière-plan
