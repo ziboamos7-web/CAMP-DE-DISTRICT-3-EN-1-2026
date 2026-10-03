@@ -1,0 +1,22 @@
+DEPLOIEMENT VERCEL — CAMP DE DISTRICT 3 EN 1
+
+IMPORTANT :
+Le dossier à déployer est celui qui contient DIRECTEMENT :
+  index.html
+  styles.css
+  js/
+  assets/
+
+Ne déploie pas un dossier parent qui contient encore un dossier
+CampDistrict3En1-REAL-FINAL.
+
+Après extraction, ouvre ce dossier et vérifie :
+  ./index.html
+  ./styles.css
+  ./js/
+  ./assets/images/
+
+Les images du site utilisent :
+  ./assets/images/...
+
+Le dossier assets/images doit impérativement être envoyé avec le site.
