@@ -1,0 +1,1 @@
+window.CD_SPEAKER_PHOTO=document.getElementById("v39MainImg")?document.getElementById("v39MainImg").getAttribute("src"):"";

@@ -1,0 +1,29 @@
+
+(function(){
+ var T={created:['🎉','Inscription réussie !','Bienvenue dans le Camp'],logout:['👋','À bientôt !','Tu es déconnecté(e)'],login:['🤗','Content de te revoir !','Reconnexion réussie'],comment:['💬','Commentaire publié','Merci pour ton message'],first:['🏆','Tu es le premier !','Premier à commenter cette publication'],share:['🚀','Partagé !','Merci de faire connaître le Camp'],repost:['🔁','Republié !','Publication republiée'],cover:['🌄','Couverture ajoutée !','Ça en jette'],avatar:['📸','Photo de profil ajoutée !','Joli sourire'],frame:['🖼️','Photo ajoutée au cadre !','Prête à partager'],read:['✅','Communiqué lu','Merci, tu es à jour'],licence:['🪪','Licence en route !','Carte officielle du Camp']};
+ var COL=['#ff7410','#ffb300','#2b8cf0','#e0245c','#34c759','#a259e6'];
+ window.cdFx=function(k,o){o=o||{};var t=T[k];if(!t)return;
+  if(o.once){var L;try{L=JSON.parse(localStorage.getItem('camp_fx_once')||'[]')}catch(e){L=[]}var key=k+':'+o.once;if(L.indexOf(key)>-1)return;L.push(key);try{localStorage.setItem('camp_fx_once',JSON.stringify(L))}catch(e){}}
+  var big=/^(first|created|licence|login)$/.test(k),e=document.createElement('div');e.className='fx'+(big?' big':'');
+  var h='<div class="fx-c"><span class="fx-e">'+t[0]+'</span><b>'+t[1]+'</b><small>'+t[2]+'</small></div>';
+  for(var i=0;i<(big?36:16);i++){var a=Math.random()*6.28,d=90+Math.random()*(big?200:120);h+='<i class="fx-p" style="--x:'+Math.cos(a)*d+'px;--y:'+(Math.sin(a)*d-40)+'px;--r:'+Math.round(Math.random()*720-360)+'deg;--c:'+COL[i%6]+';animation-delay:'+(Math.random()*.15)+'s"></i>'}
+  e.innerHTML=h;document.body.appendChild(e);if(navigator.vibrate)try{navigator.vibrate(big?[20,40,20]:15)}catch(x){}
+  setTimeout(function(){e.classList.add('out')},big?2300:1600);setTimeout(function(){e.remove()},big?2700:2000)};
+ var si=Storage.prototype.setItem;
+ Storage.prototype.setItem=function(k,v){var old=null;try{old=this.getItem(k)}catch(e){}var r=si.apply(this,arguments);
+  try{if(this===localStorage){if(k==='camp_cover')cdFx('cover');else if(k==='camp_avatar')cdFx('avatar');
+   else if(k==='camp_registration_2026'&&!old){if(localStorage.getItem('camp_was_out')==='1'){localStorage.removeItem('camp_was_out');cdFx('login')}else cdFx('created')}}}catch(e){}
+  return r};
+ document.addEventListener('change',function(e){var t=e.target;if(t&&(t.id==='cfF'||t.id==='cfF2')&&t.files&&t.files.length)cdFx('frame')},true);
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(b&&/Pré-commander/i.test(b.textContent||''))cdFx('licence')},true);
+ var MS='<svg viewBox="0 0 200 270" aria-hidden="true"><ellipse cx="100" cy="258" rx="52" ry="8" fill="#0006"/><g class="bob"><rect x="76" y="196" width="19" height="52" rx="8" fill="#15348f"/><rect x="105" y="196" width="19" height="52" rx="8" fill="#15348f"/><ellipse cx="85" cy="250" rx="14" ry="7" fill="#4a2c14"/><ellipse cx="115" cy="250" rx="14" ry="7" fill="#4a2c14"/><rect x="62" y="112" width="76" height="92" rx="24" fill="#1f52e0"/><rect x="62" y="176" width="76" height="8" fill="#2b1a0c"/><rect x="94" y="176" width="12" height="8" fill="#d9b13a"/><rect x="72" y="140" width="22" height="18" rx="4" fill="#1a45c2"/><rect x="106" y="140" width="22" height="18" rx="4" fill="#1a45c2"/><rect x="50" y="122" width="16" height="62" rx="8" fill="#1f52e0" transform="rotate(8 58 124)"/><circle cx="53" cy="188" r="10" fill="#8d5a3b"/><path d="M78 112 L100 156 L122 112 Z" fill="#e03a3a"/><path d="M78 112 L100 156" stroke="#fff" stroke-width="5"/><path d="M122 112 L100 156" stroke="#ffd23f" stroke-width="5"/><g class="wv"><rect x="132" y="70" width="16" height="62" rx="8" fill="#1f52e0"/><circle cx="140" cy="64" r="12" fill="#8d5a3b"/></g><circle cx="100" cy="82" r="34" fill="#8d5a3b"/><ellipse cx="88" cy="80" rx="5.5" ry="6.5" fill="#fff"/><ellipse cx="112" cy="80" rx="5.5" ry="6.5" fill="#fff"/><circle cx="89" cy="81" r="3" fill="#1a1020"/><circle cx="113" cy="81" r="3" fill="#1a1020"/><path d="M86 96 Q100 110 114 96" fill="#fff" stroke="#3a1c0c" stroke-width="2.5" stroke-linejoin="round"/><circle cx="80" cy="94" r="5" fill="#e87a5a" opacity=".5"/><circle cx="120" cy="94" r="5" fill="#e87a5a" opacity=".5"/><path d="M64 70 Q100 20 138 68 Q100 52 64 70 Z" fill="#1f52e0"/><circle cx="100" cy="46" r="5" fill="#ffd23f"/></g></svg>';
+ function welcome(){return;var td=new Date().toDateString();try{if(localStorage.getItem('camp_welcome_day')===td)return;localStorage.setItem('camp_welcome_day',td)}catch(e){}
+  var now=new Date(),dl=Math.ceil((new Date(2026,9,28)-now)/864e5),r=null;try{r=JSON.parse(localStorage.getItem('camp_registration_2026')||'null')}catch(e){}
+  var w=r&&r.Name?String(r.Name).trim().split(/\s+/).pop():'',nm=w?' '+w.charAt(0).toUpperCase()+w.slice(1).toLowerCase():'',j=dl+' jour'+(dl>1?'s':''),M;
+  if(dl>0)M=['Bon retour'+nm+' ! Le Camp commence dans '+j+'.','Coucou'+nm+' ! Plus que '+j+' avant Garango.','Content de te revoir'+nm+' ! J-'+dl+' : prépare ton sac !','Salut'+nm+' ! Le Camp démarre dans '+j+'.','Hello'+nm+' ! Encore '+dl+' dodo'+(dl>1?'s':'')+' avant le Camp !'];
+  else if(now<new Date(2026,10,2))M=['Bon retour'+nm+' ! Le Camp est en cours, profite de chaque instant !','Coucou'+nm+' ! Garango t’attend, bon Camp !'];
+  else M=['Bon retour'+nm+' ! Merci d’avoir vécu le Camp avec nous.'];
+  var o=document.createElement('div');o.className='mw';o.innerHTML='<div class="mw-b">'+M[Math.floor(now/864e5)%M.length]+'</div>'+MS+'<small>Touche pour fermer</small><i class="mw-t"></i>';
+  function shut(){o.classList.remove('on');setTimeout(function(){o.remove()},400)}o.onclick=shut;document.body.appendChild(o);requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('on')})});setTimeout(shut,5000)}
+ if(document.readyState==='complete')setTimeout(welcome,700);else window.addEventListener('load',function(){setTimeout(welcome,700)});
+})();
