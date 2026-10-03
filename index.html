@@ -12141,30 +12141,31 @@ html.v187-calm *,html.v187-calm *::before,html.v187-calm *::after{animation:none
   bolt:'<svg viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6L13 3Z"/></svg>',
   shield:'<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.4 3 8 7 9.5 4-1.5 7-5.1 7-9.5V6l-7-3Z"/><path d="m9 12 2.2 2.2L15.2 10"/></svg>'};
  function fld(id,label,attrs,pre,ico){return '<div class="ac-f" data-f="'+id+'"><label for="ac-'+id+'">'+label+'</label><div class="ac-i'+(ico?' has-ic':'')+'">'+(ico?'<span class="ac-ic" aria-hidden="true">'+IC[ico]+'</span>':'')+(pre?'<span class="pf">'+pre+'</span>':'')+'<input id="ac-'+id+'" '+attrs+'></div><span class="ac-e"></span></div>'}
- function pwOk(p){return p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p)}
+ function pwOk(p){return p.length>=8&&/[a-z]/.test(p)&&/[A-Z]/.test(p)&&/\d/.test(p)}
  function pwui(p){var m=ov&&ov.querySelector('.ac-mt');if(!m)return;
-  var c={len:p.length>=8,let:/[A-Za-z]/.test(p),dig:/\d/.test(p),sym:/[^A-Za-z0-9]/.test(p)};
+  var c={len:p.length>=8,low:/[a-z]/.test(p),up:/[A-Z]/.test(p),dig:/\d/.test(p),sym:/[^A-Za-z0-9]/.test(p)};
   ov.querySelectorAll('.ac-ru li').forEach(function(li){li.classList.toggle('ok',!!c[li.getAttribute('data-r')])});
-  var ok=c.len&&c.let&&c.dig,sc=!p?0:!ok?1:((c.sym&&p.length>=10)?4:(c.sym||p.length>=10)?3:2);
+  var ok=c.len&&c.low&&c.up&&c.dig,sc=!p?0:!ok?1:((c.sym&&p.length>=10)?4:(c.sym||p.length>=10)?3:2);
   m.setAttribute('data-s',sc);m.querySelector('.ac-ml').textContent=['','Trop faible','Correct','Bon','Excellent'][sc]}
- function pin(id,label,ac,ph,meter){return '<div class="ac-f" data-f="'+id+'"><label for="ac-'+id+'">'+label+'</label><div class="ac-i ac-pw has-ic"><span class="ac-ic" aria-hidden="true">'+IC.lock+'</span><input id="ac-'+id+'" type="password" maxlength="64" autocomplete="'+ac+'" autocapitalize="none" spellcheck="false" placeholder="'+ph+'"><button type="button" class="ac-eye" data-eye="ac-'+id+'" aria-label="Afficher le mot de passe">'+EYE+'</button></div>'+(meter?'<div class="ac-mt" data-s="0"><div class="ac-ms"><i></i><i></i><i></i><i></i></div><span class="ac-ml"></span></div><ul class="ac-ru"><li data-r="len">8 caractères min.</li><li data-r="let">Une lettre</li><li data-r="dig">Un chiffre</li><li data-r="sym" class="opt">Un symbole (conseillé)</li></ul>':'')+'<span class="ac-e"></span></div>'}
+ function pin(id,label,ac,ph,meter){return '<div class="ac-f" data-f="'+id+'"><label for="ac-'+id+'">'+label+'</label><div class="ac-i ac-pw has-ic"><span class="ac-ic" aria-hidden="true">'+IC.lock+'</span><input id="ac-'+id+'" type="password" maxlength="64" autocomplete="'+ac+'" autocapitalize="none" spellcheck="false" placeholder="'+ph+'"><button type="button" class="ac-eye" data-eye="ac-'+id+'" aria-label="Afficher le mot de passe">'+EYE+'</button></div>'+(meter?'<div class="ac-mt" data-s="0"><div class="ac-ms"><i></i><i></i><i></i><i></i></div><span class="ac-ml"></span></div><ul class="ac-ru"><li data-r="len">8 caractères minimum</li><li data-r="up">Une majuscule</li><li data-r="low">Une minuscule</li><li data-r="dig">Un chiffre</li><li data-r="sym" class="opt">Un symbole (conseillé)</li></ul>':'')+'<span class="ac-e"></span></div>'}
  function form(){
   var fe='<div class="ac-fe" id="acFe" role="alert"></div>';
-  if(mode==='login')return fe+'<form id="acF" novalidate>'+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+pin('pw','Mot de passe','current-password','Ton mot de passe',0)+'<button type="button" class="ac-lk" id="acForgot">Mot de passe oublié ?</button><button type="submit" class="ac-sub">Récupérer mon compte</button></form><p class="ac-sw">Pas de compte ? <button type="button" data-m="signup">Créer un compte</button></p>';
-  return fe+'<form id="acF" novalidate><div class="ac-r">'+fld('first','Prénom','autocomplete="given-name" placeholder="Jean"')+fld('last','Nom','autocomplete="family-name" placeholder="Kouassi"')+'</div>'+fld('phone','Numéro de téléphone','type="tel" inputmode="tel" autocomplete="tel" placeholder="07 00 00 00 00"','+225','ph')+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+fld('dist','District','autocomplete="off" placeholder="Ex. District de Port-Bouët"','','pin')+pin('pw','Mot de passe','new-password','Au moins 8 caractères',1)+pin('pw2','Confirmer le mot de passe','new-password','Répète ton mot de passe',0)+'<button type="submit" class="ac-sub">Créer mon compte</button><p class="ac-nt">'+IC.mail+'Un code de confirmation sera envoyé à ton e-mail.</p></form><p class="ac-sw ac-rc"><button type="button" data-m="login">Récupérer mon compte</button></p>'}
+  if(mode==='login')return fe+'<form id="acF" novalidate>'+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+pin('pw','Mot de passe','current-password','Ton mot de passe',0)+'<button type="button" class="ac-lk" id="acForgot">Mot de passe oublié ?</button><button type="submit" class="ac-sub">Se connecter</button></form>';
+  return fe+'<form id="acF" novalidate><div class="ac-r">'+fld('first','Prénom','autocomplete="given-name" placeholder="Jean"')+fld('last','Nom','autocomplete="family-name" placeholder="Kouassi"')+'</div>'+fld('phone','Numéro de téléphone','type="tel" inputmode="tel" autocomplete="tel" placeholder="07 00 00 00 00"','+225','ph')+fld('email','Adresse e-mail','type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="exemple@mail.com"','','mail')+fld('dist','District','autocomplete="off" placeholder="Ex. District de Port-Bouët"','','pin')+pin('pw','Mot de passe','new-password','Crée ton mot de passe',1)+pin('pw2','Confirmer le mot de passe','new-password','Répète ton mot de passe',0)+'<button type="submit" class="ac-sub">Créer mon compte</button></form>'}
  function paint(){var l=mode==='login';
-  ov.querySelector('h2').textContent=l?'Retrouve ton compte':'Crée ton compte';
-  ov.querySelector('.ac-sb').textContent=l?'Saisis l’e-mail et le mot de passe de ton compte.':'Crée ton compte pour accéder au Camp de District 3 en 1.';
+  ov.querySelector('h2').textContent=l?'Content de te revoir':'Rejoins le Camp';
+  ov.querySelector('.ac-sb').textContent=l?'Saisis ton e-mail et ton mot de passe pour retrouver ton espace.':'Renseigne tes informations. Un code de confirmation sera envoyé à ton e-mail.';
+  ov.querySelectorAll('.ac-tb button').forEach(function(t){var on=t.dataset.m===mode;t.classList.toggle('on',on);t.setAttribute('aria-selected',on?'true':'false')});
   ov.querySelector('.ac-fm').innerHTML=form();ov.scrollTop=0}
  function toast(t){var e=document.createElement('div');e.className='ac-t';e.textContent=t;document.body.appendChild(e);requestAnimationFrame(function(){e.classList.add('on')});setTimeout(function(){e.classList.remove('on');setTimeout(function(){e.remove()},300)},3200)}
  function open(m){mode=m==='signup'?'signup':'login';if(ov){paint();return}
   ov=document.createElement('div');ov.className='ac';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-labelledby','acTitle');
-  ov.innerHTML='<div class="ac-w"><div class="ac-br"><div class="ac-mk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16"/><path d="M9.5 20 12 15.2l2.5 4.8"/><path d="M2 20h20"/></svg></div><div class="ac-bn"><b>Camp de District 3 en 1</b><span>Garango 2026</span></div></div><h2 id="acTitle"></h2><p class="ac-sb"></p><div class="ac-fm"></div><div class="ac-lg">Ton compte est enregistré en ligne et sur cet appareil.</div></div>';
+  ov.innerHTML='<div class="ac-w"><div class="ac-br"><div class="ac-mk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16"/><path d="M9.5 20 12 15.2l2.5 4.8"/><path d="M2 20h20"/></svg></div><div class="ac-bn"><b>Camp de District 3 en 1</b><span>Garango 2026</span></div></div><div class="ac-tb" role="tablist"><button type="button" role="tab" data-m="signup">Créer un compte</button><button type="button" role="tab" data-m="login">Se connecter</button></div><h2 id="acTitle"></h2><p class="ac-sb"></p><div class="ac-fm"></div><div class="ac-lg">Ton compte est enregistré en ligne et sur cet appareil.</div></div>';
   document.body.appendChild(ov);paint();(function(){var g=document.querySelector('.ref-header .ref-logo img'),m=ov.querySelector('.ac-mk');if(g&&g.src&&m){var im=document.createElement('img');im.alt='Dynamique District de Bouaflé';im.src=g.src;m.innerHTML='';m.appendChild(im)}})();
-  ov.addEventListener('click',function(e){var s=e.target.closest('.ac-sw button[data-m]'),y=e.target.closest('.ac-eye');
+  ov.addEventListener('click',function(e){var s=e.target.closest('[data-m]'),y=e.target.closest('.ac-eye');
    if(s&&s.dataset.m!==mode){mode=s.dataset.m;paint();return}
    if(y){var i=document.getElementById(y.dataset.eye),sh=i.type==='password';i.type=sh?'text':'password';y.innerHTML=sh?EYEO:EYE;return}
-   if(e.target.id==='acForgot')ferr('Réinitialisation indisponible : les comptes sont enregistrés sur cet appareil. Rapproche-toi de l’organisation ou crée un nouveau compte.')});
+   if(e.target.id==='acForgot')ferr('Pour réinitialiser ton mot de passe, contacte l’organisation du Camp.')});
   ov.addEventListener('input',function(e){var t=e.target,f=t.closest('.ac-f');if(!f)return;
    if(t.id==='ac-pw'&&mode==='signup')pwui(t.value);
    f.classList.remove('err');var fe=ov.querySelector('#acFe');if(fe)fe.classList.remove('show')});
@@ -12188,11 +12189,11 @@ html.v187-calm *,html.v187-calm *::before,html.v187-calm *::after{animation:none
   if(ph.length<8||ph.length>12){ferrF('phone','Numéro invalide (8 à 12 chiffres).');bad=1}
   if(!EM.test(em)){ferrF('email','Saisis un e-mail valide.');bad=1}
   if(di.length<2){ferrF('dist','Indique ton district.');bad=1}
-  if(!pwOk(pw)){ferrF('pw','Utilise au moins 8 caractères, avec des lettres et des chiffres.');bad=1}
+  if(!pwOk(pw)){ferrF('pw','8 caractères minimum, avec une majuscule, une minuscule et un chiffre.');bad=1}
   if(p2!==pw||!p2){ferrF('pw2','Les mots de passe ne correspondent pas.');bad=1}
   if(bad){ferr('Vérifie les champs signalés.');return}
-  var L=accounts();if(L.some(function(a){return(a.Email||'').toLowerCase()===em})){ferrF('email','Cet e-mail a déjà un compte.');ferr('Cet e-mail a déjà un compte. Utilise « Récupérer mon compte » en bas de l’écran.');return}
-  if(L.some(function(a){return a.phone===ph})){ferrF('phone','Ce numéro a déjà un compte.');ferr('Ce numéro a déjà un compte. Utilise « Récupérer mon compte » en bas de l’écran.');return}
+  var L=accounts();if(L.some(function(a){return(a.Email||'').toLowerCase()===em})){ferrF('email','Cet e-mail a déjà un compte.');ferr('Cet e-mail a déjà un compte. Utilise l’onglet « Se connecter ».');return}
+  if(L.some(function(a){return a.phone===ph})){ferrF('phone','Ce numéro a déjà un compte.');ferr('Ce numéro a déjà un compte. Utilise l’onglet « Se connecter ».');return}
   busy=true;var salt=rnd();hash(pw,salt).then(function(h){busy=false;
    var acc={phone:ph,first:fi,last:la,Name:fi+' '+la,Phone:v('phone').trim(),Email:em,Group:di,Church:'',Pass:'',salt:salt,pw:h,ts:Date.now()};
    (window.campVerifyEmail||function(a,b,c){c()})(em,fi,function(){L.push(acc);wr(ACC,L);go(acc);try{window.campFirstRecap&&campFirstRecap()}catch(e){}toast('Compte créé. Bienvenue au Camp !')})})}
@@ -12887,6 +12888,75 @@ html body .ac .ac-lg{margin:12px 0 0;font-size:12px;color:#8a90a8}
 @media(min-width:700px){html body .ac .ac-w{padding-top:40px}}
 @media(max-width:340px){html body .ac h2{font-size:21px}}
 </style>
+<style id="v270-auth-pro">
+/* ===== V270 — Créer un compte / Se connecter : sobre, professionnel, compact ===== */
+html body .ac{background:#fff;color:#0f172a;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+html body .ac::before{display:none}
+html body .ac .ac-w{max-width:420px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 14px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
+
+/* Marque */
+html body .ac .ac-br{display:flex;align-items:center;gap:10px;margin:0;padding:0 0 14px;border-bottom:1px solid #edf0f6}
+html body .ac .ac-mk{width:36px;height:36px;margin:0;padding:2px;border-radius:10px;border:1px solid #e2e6f0;box-shadow:none;background:#fff;flex:0 0 auto}
+html body .ac .ac-mk img{border-radius:8px}
+html body .ac .ac-mk svg{width:20px;height:20px}
+html body .ac .ac-bn{display:flex;flex-direction:column;gap:1px;min-width:0;line-height:1.2}
+html body .ac .ac-bn b{font-size:13.5px;font-weight:700;color:#0f172a}
+html body .ac .ac-bn span{font-size:12px;font-weight:400;color:#6b7690}
+
+/* Onglets */
+html body .ac .ac-tb{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:16px 0 0;padding:3px;border-radius:12px;background:#f1f3f9}
+html body .ac .ac-tb button{min-height:38px;padding:0 8px;border:0;border-radius:9px;background:none;font:inherit;font-size:13.5px;font-weight:600;color:#5f6b85;touch-action:manipulation;transition:background .15s,color .15s}
+html body .ac .ac-tb button.on{background:#fff;color:#153b91;font-weight:700;box-shadow:0 1px 2px rgba(15,23,42,.12),0 0 0 1px rgba(15,23,42,.04)}
+html body .ac .ac-tb button:focus-visible,html body .ac .ac-sub:focus-visible,html body .ac .ac-lk:focus-visible,html body .ac .ac-eye:focus-visible{outline:2px solid #153b91;outline-offset:2px}
+
+/* Titre */
+html body .ac h2{margin:18px 0 0;padding:0;border:0;max-width:none;font-size:21px;line-height:1.2;font-weight:700;letter-spacing:-.012em;color:#0f172a;text-align:left}
+html body .ac .ac-sb{margin:5px 0 16px;max-width:none;font-size:13.5px;line-height:1.5;color:#5f6b85}
+
+/* Champs */
+html body .ac .ac-f{margin:0 0 12px}
+html body .ac .ac-f label{display:block;margin:0 0 5px 1px;font-size:12.5px;font-weight:600;color:#1e293b}
+html body .ac .ac-r{gap:10px}
+html body .ac .ac-i{height:44px;border:1px solid #e2e6f0;border-radius:11px;background:#f7f8fb;box-shadow:none;transition:border-color .15s,background .15s,box-shadow .15s}
+html body .ac .ac-i:focus-within{border-color:#153b91;background:#fff;box-shadow:0 0 0 3px rgba(21,59,145,.12)}
+html body .ac .ac-i input{padding:0 12px;font-size:16px;font-weight:500;color:#0f172a}
+html body .ac .ac-i input::placeholder{color:#99a1b7;font-weight:400}
+html body .ac .ac-i.has-ic input{padding-left:0}
+html body .ac .ac-ic{flex:0 0 40px;color:#7b86a0}
+html body .ac .ac-ic svg{width:17px;height:17px}
+html body .ac .ac-i:focus-within .ac-ic{color:#153b91}
+html body .ac .ac-i .pf{padding:0 8px 0 0;margin:0;font-size:14.5px;font-weight:600;color:#1e293b}
+html body .ac .ac-i .pf::after{display:none}
+html body .ac .ac-i .pf+input{padding-left:0}
+html body .ac .ac-pw input,html body .ac .ac-pw input:not(:placeholder-shown){letter-spacing:0;font-weight:500}
+html body .ac .ac-eye{flex:0 0 40px;color:#7b86a0}
+html body .ac .ac-eye svg{width:18px;height:18px}
+html body .ac .ac-e{margin:4px 1px 0;font-size:12px;line-height:1.35;color:#c42b36}
+html body .ac .ac-f.err .ac-i{border-color:#e5484d;background:#fff8f8}
+html body .ac .ac-fe{margin:0 0 12px;padding:9px 12px;border-radius:10px;border:1px solid #f6cdd0;background:#fff5f5;font-size:12.5px;line-height:1.4;color:#a52430}
+
+/* Force du mot de passe */
+html body .ac .ac-mt{display:flex;align-items:center;gap:10px;margin:8px 1px 0}
+html body .ac .ac-ms{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+html body .ac .ac-ms i{height:3px;border-radius:2px;background:#e4e7ef;transition:background .2s}
+html body .ac .ac-ml{min-width:66px;text-align:right;font-size:12px;font-weight:600;color:#5f6b85}
+html body .ac .ac-ru{list-style:none;margin:8px 1px 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}
+html body .ac .ac-ru li{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.25;color:#6b7690}
+html body .ac .ac-ru li::before{content:"";flex:0 0 14px;width:14px;height:14px;box-sizing:border-box;border-radius:50%;border:1.5px solid #cdd2e0;background:center/9px no-repeat}
+html body .ac .ac-ru li.ok{color:#1b7a43}
+html body .ac .ac-ru li.ok::before{border-color:#2e9e5b;background-color:#2e9e5b;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E")}
+
+/* Bouton et liens */
+html body .ac .ac-sub{width:100%;min-height:46px;margin-top:8px;border:0;border-radius:11px;background:#153b91;color:#fff;font:inherit;font-size:15px;font-weight:600;letter-spacing:0;box-shadow:none;touch-action:manipulation}
+html body .ac .ac-sub:active{background:#102f78;transform:none}
+html body .ac .ac-sub:disabled{opacity:.6}
+html body .ac .ac-lk{display:block;margin:-2px 0 10px auto;padding:6px 1px;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:#153b91}
+html body .ac .ac-lg{margin:16px 0 0;font-size:12px;line-height:1.45;text-align:center;color:#8590a8}
+@media(min-width:700px){html body .ac .ac-w{padding-top:48px}}
+@media(max-width:340px){html body .ac .ac-r{grid-template-columns:minmax(0,1fr)}html body .ac .ac-ru{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html body .ac .ac-tb button,html body .ac .ac-i,html body .ac .ac-ms i{transition:none}}
+</style>
+
 <script id="v223-auth-lock">
 /* Bloque le défilement de la page derrière l'écran de connexion */
 (function(){
@@ -12970,7 +13040,7 @@ html body .ac .ac-lg{margin:12px 0 0;font-size:12px;color:#8a90a8}
  function txt(e){return String(e&&(e.message||e)||'').toLowerCase()}
  function isNet(e){return /failed to fetch|network|load failed|fetch/.test(txt(e))&&!(e&&e.status)}
  function sendMsg(e){var m=txt(e);
-  if((e&&e.code==='exists')||/already|registered|exists/.test(m))return 'Cet e-mail a déjà un compte. Utilise « Récupérer mon compte » sur l’écran précédent.';
+  if((e&&e.code==='exists')||/already|registered|exists/.test(m))return 'Cet e-mail a déjà un compte. Reviens à l’écran précédent et utilise l’onglet « Se connecter ».';
   if((e&&e.status===429)||/rate limit|too many|only request|after \d+ seconds/.test(m))return 'Trop de demandes d’envoi. Patiente une minute puis renvoie le code.';
   if(isNet(e))return 'Connexion impossible. Vérifie ta connexion internet puis renvoie le code.';
   return 'L’e-mail n’a pas pu être envoyé. Réessaie dans un instant.'}
